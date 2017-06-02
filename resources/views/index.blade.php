@@ -7,11 +7,12 @@
 @stop
 
 @section('content')
-  Your content here !!!
+  IndexController의 index() 입니다.
 @stop
 
 @section('script')
   <script>
-    alert("Hello Blade~ ^^/");
+    // Some Scripts
+    // alert("Hello Blade~ ^^/");
   </script>
 @stop

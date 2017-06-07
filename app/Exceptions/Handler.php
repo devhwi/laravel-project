@@ -16,7 +16,7 @@ class Handler extends ExceptionHandler
     protected $dontReport = [
         \Illuminate\Auth\AuthenticationException::class,
         \Illuminate\Auth\Access\AuthorizationException::class,
-        \Symfony\Component\HttpKernel\Exception\HttpException::class,
+        // \Symfony\Component\HttpKernel\Exception\HttpException::class,
         \Illuminate\Database\Eloquent\ModelNotFoundException::class,
         \Illuminate\Session\TokenMismatchException::class,
         \Illuminate\Validation\ValidationException::class,
@@ -44,6 +44,22 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+            return response(view('errors.notice', [
+                'title'       => 'Page Not Found',
+                'description' => 'Sorry, the page or resource you are trying to view does not exist.'
+            ]), 404);
+        }
+
+        if ($exception instanceof CustomException) {
+            return response()->json([
+                'Success' => false,
+                'Message' => $exception->getMessage()
+            ], 500);
+        } else {
+            return parent::render($request, $exception);
+        }
+
         return parent::render($request, $exception);
     }
 

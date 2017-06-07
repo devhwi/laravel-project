@@ -11,7 +11,12 @@
 |
 */
 
-Route::get('/', 'IndexController@index');
+use App\Exceptions\CustomException;
+
+// Route::get('/', 'IndexController@index');
+Route::get('/', function() {
+  return view('welcome');
+});
 // Route::get('auth', function () {
 //     $credentials = [
 //         'email'    => 'zziller03@gmail.com',
@@ -72,4 +77,66 @@ Route::get('/', 'IndexController@index');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('auth', function () {
+    $credentials = [
+        'email'    => 'zziller03@gmail.com',
+        'password' => 'password'
+    ];
+
+    if (! Auth::attempt($credentials)) {
+        return 'Incorrect username and password combination';
+    }
+
+    Event::fire('user.login', [Auth::user()]);
+
+    var_dump('Event fired and continue to next line...');
+
+    return;
+});
+
+Event::listen('user.login', function($user) {
+    // var_dump('"user.log" event catched and passed data is:');
+    // var_dump($user->toArray());
+    $user->last_login = (new DateTime)->format('Y-m-d H:i:s');
+
+    return $user->save();
+});
+
+// 유효성 검사 예시(웹)
+Route::post('posts', function(\Illuminate\Http\Request $request) {
+    $rule = [
+        'title' => ['required'], // == 'title' => 'required'
+        'body' => ['required', 'min:10'] // == 'body' => 'required|min:10'
+    ];
+
+    $validator = Validator::make($request->all(), $rule);
+
+    if ($validator->fails()) {
+        return redirect('posts/create')->withErrors($validator)->withInput();
+    }
+
+    // validation success
+    return 'Valid & proceed to next job ~';
+});
+
+Route::get('posts/create', function() {
+    return view('posts.create');
+});
+
+Route::get('/error', function() {
+    // throw new Exception('Some bad thing happened');
+    // abort(404);
+    return App\Post::findOrFail(100);
+});
+
+Route::get('/customError', function() {
+  $message = [
+    'Success' => true,
+    'Message' => 'Custom Exception Test'
+  ];
+
+  // 강제 예외 발생
+  throw new CustomException('Some Exception!!!!!');
+
+  return response()->json($message);
+});

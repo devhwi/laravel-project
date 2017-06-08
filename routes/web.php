@@ -12,6 +12,7 @@
 */
 
 use App\Exceptions\CustomException;
+use Illuminate\Auth\AuthenticationException;
 
 // Route::get('/', 'IndexController@index');
 Route::get('/', function() {
@@ -136,7 +137,14 @@ Route::get('/customError', function() {
   ];
 
   // 강제 예외 발생
-  throw new CustomException('Some Exception!!!!!');
+  // throw new CustomException('Some Exception!!!!!');
+  throw new AuthenticationException();
 
   return response()->json($message);
+});
+
+Route::get('page', function() {
+    $posts = App\Post::with('user')->paginate(2);
+
+    return view('posts', compact('posts'));
 });

@@ -76,8 +76,6 @@ Route::get('/', function() {
 //         return 'see you again';
 // });
 
-Auth::routes();
-
 Route::get('auth', function () {
     $credentials = [
         'email'    => 'zziller03@gmail.com',
@@ -150,3 +148,7 @@ Route::get('page', function() {
 });
 
 Route::resource('articles', 'ArticlesController');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index');

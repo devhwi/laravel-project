@@ -148,3 +148,5 @@ Route::get('page', function() {
 
     return view('posts', compact('posts'));
 });
+
+Route::resource('articles', 'ArticlesController');

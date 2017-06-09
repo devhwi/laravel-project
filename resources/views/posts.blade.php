@@ -3,25 +3,30 @@
 </head>
 <div class="container">
   <table class="table">
-    <tr>
-      <th>제목</th>
-      <th>작성자</th>
-    </tr>
-    @forelse($posts as $post)
-    <tr>
-      <td>{{$post->title}}</td>
-      <td>{{$post->user->name}}</td>
-    </tr>
-    @empty
-    <tr>
-      <td colspan=2>글이 없습니다.</td>
-    </tr>
-    @endforelse
+    <thead>
+      <tr>
+        <th>제목</th>
+        <th>작성자</th>
+      </tr>
+    </thead>
+    <tbody>
+      @forelse($posts as $post)
+      <tr>
+        <td>{{$post->title}}</td>
+        <td>{{$post->user->name}}</td>
+      </tr>
+      @empty
+      <tr>
+        <td colspan=2>글이 없습니다.</td>
+      </tr>
+      @endforelse
+    </tbody>
+    <tfoot>
+      @if($posts)
+        <div class="text-center">
+          {!! $posts->render() !!}
+        </div>
+      @endif
+    </tfoot>
   </table>
 </div>
-
-@if($posts)
-  <div class="text-center">
-    {!! $posts->render() !!}
-  </div>
-@endif

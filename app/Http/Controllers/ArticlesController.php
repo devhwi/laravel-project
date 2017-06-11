@@ -13,7 +13,7 @@ class ArticlesController extends Controller
      */
     public function index()
     {
-      $articles = \App\Article::paginate(10);
+      $articles = \App\Article::latest()->paginate(10);
 
       return view('articles.index', compact('articles'));
     }
@@ -64,10 +64,10 @@ class ArticlesController extends Controller
         //                ->withInput();
         // }
         //
-        // $article = \App\User::find(1)->articles()
-        //                              ->create($request->all());
+        $article = \App\User::find(1)->articles()
+                                     ->create($request->all());
 
-        $article = \App\User::find(\Auth::user()->id)->articles()->create($request->all());
+        // $article = \App\User::find(\Auth::user()->id)->articles()->create($request->all());
 
         if (! $article) {
           return back()->with('flash_message', '글이 저장되지 않았습니다.')

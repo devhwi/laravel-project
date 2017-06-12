@@ -152,3 +152,8 @@ Route::resource('articles', 'ArticlesController');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
+
+Route::get('docs/{file?}', [
+    'as'   => 'documents.show',
+    'uses' => 'DocumentController@show'
+]);
